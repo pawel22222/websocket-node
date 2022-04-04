@@ -5,33 +5,40 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="client.css">
     <title>Client1</title>
 </head>
 
 <body>
-    <h1>Client1</h1>
-    <hr>
+    <h1>Client1 (Paweł)</h1>
     <div class="chat">
 
-    </div>
-    <hr>
+        <div class="messages"></div>
 
-    <form>
-        <input type="text" id="input" placeholder="Send message...">
-        <button onclick="sendMessage(input.value)">Send</button>
-    </form>
+        <form class="form-mess">
+            <input id="input" class="form-mess__input" type="text" placeholder="Send message...">
+
+            <button onclick="sendMessage(input.value)" class="form-mess__button">Send</button>
+        </form>
+    </div>
 </body>
 
 <script>
     const selfId = 'Paweł'
     let messages = []
 
-    const chat = document.querySelector('.chat')
+    const messagesDiv = document.querySelector('.messages')
 
     function buildChat(messages) {
-        chat.innerHTML = messages.reduce((total, { id, text }) => {
-            return total + `<div>${id}: ${text}</div>`
+        messagesDiv.innerHTML = messages.reduce((total, { id, text }) => {
+            if (id === 'Michał') {
+                return total + `<div class="messages__mess messages__mess--he">${id}: ${text}</div>`
+            } else {
+                return total + `<div class="messages__mess">${id}: ${text}</div>`
+            }
         }, '')
+
+        messagesDiv.scrollTop = messagesDiv.scrollHeight
     }
 
     function addMessage(id, mess) {
