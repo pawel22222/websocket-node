@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client1</title>
+</head>
+
+<body>
+    <h1>Client1</h1>
+    <hr>
+    <div class="chat">
+
+    </div>
+    <hr>
+
+    <form>
+        <input type="text" id="input" placeholder="Send message...">
+        <button onclick="sendMessage(input.value)">Send</button>
+    </form>
+</body>
+
+<script>
+    const selfId = 'Paweł'
+    let messages = []
+
+    const chat = document.querySelector('.chat')
+
+    function buildChat(messages) {
+        chat.innerHTML = messages.reduce((total, { id, text }) => {
+            return total + `<div>${id}: ${text}</div>`
+        }, '')
+    }
+
+    function addMessage(id, mess) {
+        messages.push({ id: id, text: mess })
+        buildChat(messages)
+    }
+
+    // Create WebSocket connection.
+    const socket = new WebSocket('ws://localhost:3000')
+
+    // Connection opened
+    socket.addEventListener('open', function (event) {
+        console.log('Conected to WS Server')
+    })
+
+    // Listen for messages
+    socket.addEventListener('message', function (event) {
+        messages = JSON.parse(event.data)
+        buildChat(messages)
+    })
+
+    const sendMessage = (mess) => {
+        event.preventDefault()
+
+        addMessage(selfId, mess)
+
+        socket.send(JSON.stringify({ id: selfId, text: mess }))
+
+        input.value = ''
+    }
+</script>
+
+</html>
